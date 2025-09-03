@@ -21,10 +21,11 @@ class BookingCache {
     //读取缓存
     func load() -> Booking? {
         guard let data  = UserDefaults.standard.data(forKey: key),  let booking = try? JSONDecoder().decode(Booking.self, from: data) else {
+            
             print("无缓存数据")
             return nil
         }
-        
+        print("Booking 解码成功: \(booking)")
         return booking
     }
     

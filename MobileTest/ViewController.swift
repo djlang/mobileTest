@@ -18,9 +18,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         // Do any additional setup after loading the view.
         title = "Booking 列表"
         view.backgroundColor = .white
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "刷新", style: .plain, target: self, action: #selector(refreshData))
         setupTableView()
         loadData()
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "刷新", style: .plain, target: self, action: #selector(refreshData))
+        
         
     }
    
@@ -38,6 +39,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
    private func loadData(forceRefresh: Bool = false) {
         manager.loadBooking(forceRefresh: forceRefresh) { [weak self] booking in
             // 主线程更新 UI
+            
+            print("segments 数量: \(booking?.segments.count ?? 0)")
             DispatchQueue.main.async { // 回到主线程更新 UI
                 if let booking = booking {
                     self?.segments = booking.segments // 保存航段数据
@@ -45,17 +48,17 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                     
                 }
             }
-            
-//            if let booking = booking {
-//                self?.segments = booking.segments // 保存航段数据
-//                self?.tableView.reloadData()
-//                
-//            }
+
         }
     }
     
     @objc func refreshData() {
         loadData(forceRefresh: true) // 刷新数据
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        tableView.frame = view.bounds
     }
     
     
